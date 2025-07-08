@@ -11,6 +11,7 @@ import java.util.UUID;
 @Table (name ="product")
 @RequiredArgsConstructor
 public class Product {
+    public Product(){}
     @Id
     @Getter
     @NonNull
