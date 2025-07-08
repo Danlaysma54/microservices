@@ -1,0 +1,14 @@
+@startuml
+entity "product" as pr {
+id: UUID primary key
+---
+name varchar(128) not null
+price int not null
+description text not null
+quantity int not null
+}
+entity "order" as or {
+id: UUID primary key
+
+}
+@enduml
