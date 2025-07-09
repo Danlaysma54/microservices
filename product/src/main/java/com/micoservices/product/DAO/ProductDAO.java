@@ -2,6 +2,7 @@ package com.micoservices.product.DAO;
 
 import com.micoservices.product.DAO.interfaces.IProductDAO;
 import com.micoservices.product.entity.Product;
+import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -18,19 +19,48 @@ public class ProductDAO implements IProductDAO {
 
     @Override
     public List<Product> findAll() {
-        return (List<Product>)
-                sessionFactory.openSession().createQuery("from Product")
-                        .list();
+        try (Session session = sessionFactory.openSession()) {
+            return (List<Product>) session.createQuery("from Product").list();
+        }
     }
 
     @Override
     public UUID addProduct(Product product) {
-        Session session = sessionFactory.openSession();
-        Transaction tx1 = session.beginTransaction();
-        UUID addedProduct = (UUID) session.save(product);
-        tx1.commit();
-        session.close();
-        return addedProduct;
+        try (Session session = sessionFactory.openSession()) {
+            Transaction tx1 = session.beginTransaction();
+            session.persist(product);
+            tx1.commit();
+            return product.getId();
+        }
 
+    }
+
+    @Override
+    public Product editProduct(Product product) {
+        try (Session session = sessionFactory.openSession()) {
+
+            Transaction tx2 = session.beginTransaction();
+            Product pr = session.merge(product);
+            tx2.commit();
+            return pr;
+        }
+    }
+
+    @Override
+    public void deleteProduct(UUID productId) {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction tx = session.beginTransaction();
+            session.remove(productId);
+        }
+    }
+
+    @Override
+    public Product getProductById(UUID productId) {
+        try (Session session = sessionFactory.openSession()) {
+
+            if (session.get(Product.class, productId) == null) {
+                throw new NullPointerException("There is no product with that id");
+            }
+        }
     }
 }

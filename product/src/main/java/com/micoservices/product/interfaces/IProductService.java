@@ -7,5 +7,10 @@ import java.util.UUID;
 
 public interface IProductService {
     List<Product> getAllProducts();
+
     UUID addProduct(Product product);
+
+    Product editProduct(Product product);
+
+    void deleteProduct(UUID productId);
 }

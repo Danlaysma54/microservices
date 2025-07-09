@@ -13,7 +13,7 @@ import java.util.UUID;
 @Service
 public class ProductService implements IProductService {
     @Autowired
-    private  IProductDAO productDAO;
+    private IProductDAO productDAO;
 
     @Override
     public List<Product> getAllProducts() {
@@ -21,7 +21,17 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public UUID addProduct(Product product){
+    public UUID addProduct(Product product) {
         return productDAO.addProduct(product);
+    }
+
+    @Override
+    public Product editProduct(Product product) {
+        return productDAO.editProduct(product);
+    }
+
+    @Override
+    public void deleteProduct(UUID productId) {
+        productDAO.deleteProduct(productId);
     }
 }
